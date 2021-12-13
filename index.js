@@ -16,4 +16,6 @@ app.use('/usuarios', usuariosRouter);
 app.use('/chats', chatsRouter);
 app.use('/emojis', emojisRouter);
 
-app.listen(8888, ()=>console.log('Se levanto el servidor'));
+const PORT = process.env.PORT || 8888;
+
+app.listen(PORT, ()=>console.log('Se levanto el servidor'));
