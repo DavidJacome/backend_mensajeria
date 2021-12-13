@@ -2,9 +2,21 @@ var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
 var usuario = require('../models/usuario');
+var cloudinary = require('cloudinary').v2;
+CLOUDINARY_URL='cloudinary://943391434926164:l14yENBGLuQ6HQRvnv7G5WShHaA@dalarapp2021'
+cloudinary.config({ 
+    cloud_name: 'dalarapp2021', 
+    api_key: '943391434926164', 
+    api_secret: 'l14yENBGLuQ6HQRvnv7G5WShHaA',
+    secure: true
+});
 
 //Registrar Usuario
-router.post('/registro',function(req,res){
+router.post('/registro', async function(req,res){
+    // let imagen1 = await cloudinary.uploader.upload(req.files.imagen1.tempFilePath, { folder: 'mensajeria/perfil' }, function (err, image) {
+    //     if (err) { console.warn(err); }
+    //     console.log(image.url);
+    // });
     let nuevoUsuario = new usuario(
         {
             nombre:req.body.nombre,
@@ -170,6 +182,48 @@ router.get('/:id',function(req,res){
         res.end();
     });
 });
+//Actualizar datos y foto
+// router.post('/:idUsuario', async function(req, res){
+// 	let imagenPerfil = await cloudinary.uploader.upload(req.files.imagenPerfil.tempFilePath, { folder: 'Mensajeria/perfil' }, function (err, image) {
+//         if (err) { console.warn(err); }
+//         console.log(image.url);
+//     });
+//     usuario.update(
+//         {
+//             _id : mongoose.Types.ObjectId(req.params.idUsuario)
+//         },{
+//             $push: {                
+//                 foto:imagenPerfil.url,
+//                 nombre:req.body.nombre,
+//                 estado:req.body.estado,
+//                 contrasena:req.body.contrasena
+//             }
+//         })
+//     .then((result) => {
+//         res.send(result);res.end();
+//     })
+//     .catch((error) => {
+//         res.send(error);res.end();
+//     });
+// });
+
+//Obtener id por telefono
+router.post("/numeroTelefono", (req, res) => {
+	usuario
+		.find(
+			{telefono: req.body.numeroTelefono},
+			{_id:true}
+		)
+		.then((result) => {
+			res.send(result[0]);
+			res.end();
+		})
+		.catch((error) => {
+			res.send(error);
+			res.end();
+		});
+});
+
 
 
 module.exports = router
