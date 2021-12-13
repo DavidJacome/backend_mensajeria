@@ -148,6 +148,8 @@ router.get("/:idUsuario/conversaciones", (req, res) => {
 //Obtener busqueda chat 
 router.get("/:idUsuario/conversaciones/:busqueda", (req, res) => {
     var conversacionesUsuario = [];
+    var busqueda = req.params.busqueda.toLowerCase();
+    var busquedaER = busqueda.match(/([a-zA-Z])( ?([A-Za-z]))?/)[0];
 	usuario
 		.find(
 			{_id: mongoose.Types.ObjectId(req.params.idUsuario)},
@@ -156,7 +158,9 @@ router.get("/:idUsuario/conversaciones/:busqueda", (req, res) => {
 		.then((result) => {
             conversacionesUsuario = result[0].conversaciones;
             for (let i = 0; i < conversacionesUsuario.length; i++) {
-                if (req.params.busqueda == conversacionesUsuario[i].nombreDestinatario) {
+                var nombreDB = conversacionesUsuario[i].nombreDestinatario.toLowerCase();
+                var nombreER = nombreDB.match(/([a-zA-Z])( ?([A-Za-z]))?/)[0];
+                if (busquedaER == nombreER) {
                     res.send(conversacionesUsuario[i]);res.end();
                 }
             }
